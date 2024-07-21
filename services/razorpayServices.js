@@ -4,8 +4,8 @@ const Razorpay = require("razorpay");
 // Assuming you have a config file for keys
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_KStLt14203VFVn",
-  key_secret: "Od2TZxpkVAXRQhxogFzzN3Nf",
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
 
 // Function to fetch payment details by payment ID

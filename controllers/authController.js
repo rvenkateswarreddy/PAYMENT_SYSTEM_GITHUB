@@ -39,10 +39,15 @@ exports.signup = async (req, res) => {
       },
     };
 
-    jwt.sign(payload, "payment", { expiresIn: "5 days" }, (err, token) => {
-      if (err) throw err;
-      res.json({ token });
-    });
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: "5 days" },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
@@ -77,21 +82,26 @@ exports.login = async (req, res) => {
       },
     };
 
-    jwt.sign(payload, "payment", { expiresIn: "5 days" }, (err, token) => {
-      if (err) throw err;
-      res.json({
-        token,
-        user: {
-          id: student._id,
-          name: student.name,
-          email: student.email,
-          phone: student.phone,
-          courseName: student.courseName,
-        },
-        payments,
-        fees,
-      });
-    });
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET,
+      { expiresIn: "5 days" },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          token,
+          user: {
+            id: student._id,
+            name: student.name,
+            email: student.email,
+            phone: student.phone,
+            courseName: student.courseName,
+          },
+          payments,
+          fees,
+        });
+      }
+    );
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

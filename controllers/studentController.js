@@ -9,8 +9,8 @@ const Category = require("../models/Category");
 
 // Initialize Razorpay instance
 const razorpay = new Razorpay({
-  key_id: "rzp_test_KStLt14203VFVn",
-  key_secret: "Od2TZxpkVAXRQhxogFzzN3Nf",
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_SECRET_KEY,
 });
 
 // @route   GET api/students/dashboard
@@ -166,8 +166,8 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "rvenkateswarreddy12345@gmail.com", // Your email address
-    pass: "ixre adqd kylo ojiz", // Your email password or app-specific password
+    user: process.env.EMAILJS_EMAIL,
+    pass: process.env.EMAILJS_PASSWORD, // Your email password or app-specific password
   },
 });
 
