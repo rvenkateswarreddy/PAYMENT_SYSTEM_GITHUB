@@ -1,10 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const Student = require("./models/Student");
 
 require("dotenv").config();
 
 const connectDB = require("./config/db");
+const Category = require("./models/Category");
+const Fee = require("./models/Fee");
+const Payment = require("./models/Payment");
 
 const app = express();
 app.use(
@@ -25,9 +29,6 @@ app.use(express.json());
 // Connect to MongoDBa
 connectDB();
 
-// Init Middleware
-
-// Define Routes
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/admin", require("./routes/admin"));
 app.use("/api/students", require("./routes/students"));
@@ -79,6 +80,25 @@ app.delete("/api/posts/:id", async (req, res) => {
     res.json({ message: "Post deleted" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+app.get("/api/student/:admissionNo", async (req, res) => {
+  try {
+    const student = await Student.findOne({
+      admissionNo: req.params.admissionNo,
+    });
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+    const payments = await Payment.find({ studentpaymentid: student._id });
+    const fees = await Fee.find({ studentfeeId: student._id }).populate(
+      "categoryId"
+    );
+
+    res.json({ student, payments, fees });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
