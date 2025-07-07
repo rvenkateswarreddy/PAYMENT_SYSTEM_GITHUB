@@ -2,9 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Student = require("./models/Student");
-
+const nodemailer = require("nodemailer");
 require("dotenv").config();
-
+const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
 const Category = require("./models/Category");
 const Fee = require("./models/Fee");
@@ -26,6 +26,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(bodyParser.json());
 // Connect to MongoDBa
 connectDB();
 
@@ -101,7 +102,35 @@ app.get("/api/student/:admissionNo", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+app.post("/send-email", async (req, res) => {
+  const { user_name, user_email, message } = req.body;
 
+  // Configure the transporter
+  const transporter = nodemailer.createTransport({
+    service: "Gmail", // You can use any email service (e.g., Gmail, Outlook)
+    auth: {
+      user: "vijaykumargokulkumar@gmail.com", // Your email address
+      pass: "hjlk vkxa wksv pgqr", // Your email password or app password
+    },
+  });
+
+  // Email options
+  const mailOptions = {
+    from: user_email,
+    to: "vijaykumargokulkumar@gmail.com", // Recipient email address
+    subject: `New Contact Form Submission from ${user_name}`,
+    text: `Name: ${user_name}\nEmail: ${user_email}\n\nMessage:\n${message}`,
+  };
+
+  try {
+    // Send the email
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ message: "Failed to send email." });
+  }
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
