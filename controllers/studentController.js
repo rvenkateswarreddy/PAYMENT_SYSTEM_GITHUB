@@ -145,6 +145,7 @@ exports.makePayment = async (req, res) => {
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (error) {
+    console.log("error creating order", error)
     res.status(500).send(error);
   }
 };
